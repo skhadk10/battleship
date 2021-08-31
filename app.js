@@ -14,8 +14,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const infoDisplay = document.querySelector("#info");
   const userSquares = [];
   const computerSquares = [];
-  let isGameOver = true;
-  let CurrentPlayer = "user ";
+  let isGameOver = false;
+  let currentPlayer = "user";
   let isHorizontal = true;
   const width = 10;
   //  create Board
@@ -185,16 +185,22 @@ document.addEventListener("DOMContentLoaded", () => {
     let shipLastId = lastShipIndex + parseInt(this.dataset.id);
     console.log(shipLastId);
 
+    const notAllowedHorizontal=[0,10,20,30,40,50,60,70,80,90,1,11,21,31,41,51,61,71,81,91,2,22,32,42,52,62,72,82,92,3,13,23,33,43,43,53,63,73,83,93]
+
+    const notAllowedVertical=[98,97,96,95,94,93,92,91,90,89,88,87,86,85,84,83,82,81,80,79,78,77,76,75,74,73,72,71,70,69,68,67,66,65,64,63,62,61,60]
+    let newNOtAllowedHorizontal=notAllowedHorizontal.splice(0,10*lastShipIndex)
+    let newNOtAllowedVertical=notAllowedVertical.splice(0,10*lastShipIndex)
+    
     selectedShipIndex=parseInt(selectedShipNameWithIndex.substr(-1))
   
     shipLastId=shipLastId-selectedShipIndex
     console.log(shipLastId);
 
-    if(isHorizontal) {
+    if(isHorizontal && !newNOtAllowedHorizontal.includes(shipLastId)) {
       for(let i=0; i<draggedShipLength; i++){
         userSquares[parseInt(this.dataset.id) - selectedShipIndex + i].classList.add('taken',shipClass)
       }
-    } else if(!isHorizontal) { 
+    } else if(!isHorizontal && !newNOtAllowedVertical.includes(shipLastId)) { 
       for(let i=0; i<draggedShipLength; i++){
       userSquares[parseInt(this.dataset.id) - selectedShipIndex + width*i].classList.add('taken',shipClass)
     }}else return
@@ -203,5 +209,39 @@ document.addEventListener("DOMContentLoaded", () => {
   function dragEnd() {
     console.log("drag end")}
 
+  function playGame(){
+
+    if(isGameOver) return 
+    
+    if(currentPlayer==='user') {
+      console.log("working")
+      turnDisplay.innerHTML='Your Go'
+      computerSquares.forEach(square=>square.addEventListener('click',function(e){
+        revealSquare(square)
+      }))
+    }
+    if(currentPlayer==='computer'){
+      turnDisplay.innerHTML='Computers Go'
+    }
+  }
+  startButton.addEventListener('click',playGame)
+
+  let destroyerCount=0
+  let submarineCount=0
+  let cruiserCount=0
+  let battleshipCount=0
+  let carrierCount=0
   
+  function revealSquare(square){
+    if(square.classList.contains('destroyer')) destroyerCount++
+    if(square.classList.contains('submarine')) submarineCount++
+    if(square.classList.contains('cruiser')) cruiserCount++
+    if(square.classList.contains('battleship')) battleshipCount++
+    if(square.classList.contains('carrier')) carrierCount++
+
+    if(square.classList.contains('taken')){
+      square.classList.add('boom')
+      console.log('click')
+    }
+  }
 });
