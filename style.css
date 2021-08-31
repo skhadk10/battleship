@@ -29,9 +29,9 @@
 .grid-display{
     width: 400px;
     height: 400px;
-    /* display: flex;
+    display: flex;
     flex-wrap: wrap;
-    flex-direction: column; */
+    flex-direction: column;
     background-color: yellow;
     margin: 20px;
 }

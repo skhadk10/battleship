@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const computerSquares = [];
   let isGameOver = true;
   let CurrentPlayer = "user ";
-  let isHorizontal = false;
+  let isHorizontal = true;
   const width = 10;
   //  create Board
 
@@ -117,14 +117,17 @@ document.addEventListener("DOMContentLoaded", () => {
       battleship.classList.toggle("battleship-container-vertical");
       carrier.classList.toggle("carrier-container-vertical");
       isHorizontal = false;
+      console.log(isHorizontal);
       return;
-    } else {
-      destroyer.classList.toggle("destroyer-container");
-      submarine.classList.toggle("submarine-container");
-      cruiser.classList.toggle("cruiser-container");
-      battleship.classList.toggle("battleship-container");
-      carrier.classList.toggle("carrier-container");
+    } 
+    if(!isHorizontal) {
+      destroyer.classList.toggle("destroyer-container-vertical");
+      submarine.classList.toggle("submarine-container-vertical");
+      cruiser.classList.toggle("cruiser-container-vertical");
+      battleship.classList.toggle("battleship-container-vertical");
+      carrier.classList.toggle("carrier-container-vertical");
       isHorizontal = true;
+      console.log(isHorizontal);
       return;
     }
   };
@@ -133,21 +136,11 @@ document.addEventListener("DOMContentLoaded", () => {
   // move around user ship
 
   ships.forEach((ship) => ship.addEventListener("dragstart", dragStart));
-  userSquares.forEach((square) =>
-    square.addEventListener("dragstart", dragStart)
-  );
-  userSquares.forEach((square) =>
-    square.addEventListener("dragover", dragOver)
-  );
-  userSquares.forEach((square) =>
-    square.addEventListener("dragenter", dragEnter)
-  );
-  userSquares.forEach((square) =>
-    square.addEventListener("dragleave", dragLeave)
-  );
-  userSquares.forEach((square) =>
-    square.addEventListener("dragdrop", dragDrop)
-  );
+  userSquares.forEach((square) =>square.addEventListener("dragstart", dragStart));
+  userSquares.forEach((square) =>square.addEventListener("dragover", dragOver));
+  userSquares.forEach((square) =>square.addEventListener("dragenter", dragEnter));
+  userSquares.forEach((square) =>square.addEventListener("dragleave", dragLeave));
+  userSquares.forEach((square) =>square.addEventListener("drop", dragDrop));
   userSquares.forEach((square) => square.addEventListener("dragend", dragEnd));
 
   let selectedShipNameWithIndex;
@@ -163,28 +156,52 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function dragStart(e) {
    draggedShip=this
-   draggedShipLength=draggedShip.length
+   draggedShipLength=this.childNodes.length
    console.log(draggedShip);
   }
 
   function dragOver(e) {
+ 
     e.preventDefault();
+
   }
   function dragEnter(e) {
+    
     e.preventDefault();
+    
   }
   function dragLeave() {
-    console.log("drage leave");
+    console.log("drag leave");
   }
 
   function dragDrop() {
+    
+    
     let shipNameWithLastId = draggedShip.lastChild.id;
     let shipClass = shipNameWithLastId.slice(0,-2);
    console.log(shipClass);
   
-    // let lastShipIndex = parseInt(shipNameWithLastId.substr(-1));
-    // let shipLastId = lastShipIndex + parseInt(this.dataset.id);
-    // console.log(shipLastId);
+    let lastShipIndex = parseInt(shipNameWithLastId.substr(-1));
+    let shipLastId = lastShipIndex + parseInt(this.dataset.id);
+    console.log(shipLastId);
+
+    selectedShipIndex=parseInt(selectedShipNameWithIndex.substr(-1))
+  
+    shipLastId=shipLastId-selectedShipIndex
+    console.log(shipLastId);
+
+    if(isHorizontal) {
+      for(let i=0; i<draggedShipLength; i++){
+        userSquares[parseInt(this.dataset.id) - selectedShipIndex + i].classList.add('taken',shipClass)
+      }
+    } else if(!isHorizontal) { 
+      for(let i=0; i<draggedShipLength; i++){
+      userSquares[parseInt(this.dataset.id) - selectedShipIndex + width*i].classList.add('taken',shipClass)
+    }}else return
+    displayGrid.removeChild(draggedShip)
   }
-  function dragEnd() {}
+  function dragEnd() {
+    console.log("drag end")}
+
+  
 });
