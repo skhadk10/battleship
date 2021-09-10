@@ -268,9 +268,10 @@ document.addEventListener("DOMContentLoaded", () => {
       if (square.classList.contains("taken")) {
         square.classList.add("boom");
         console.log("click");
+        infoDisplay.innerHTML = "You HIT Computer ship";
       } else {
         square.classList.add("miss");
-        console.log("click");
+        infoDisplay.innerHTML = "YOu MISS Computer ship";
       }
       checkForWins();
       currentPlayer = "computer";
@@ -295,8 +296,10 @@ document.addEventListener("DOMContentLoaded", () => {
       if (userSquares[random].classList.contains("carrier")) cpucarrierCount++;
       if (userSquares[random].classList.contains("taken")) {
         userSquares[random].classList.add("boom");
+        infoDisplay.innerHTML = "Computer HIT your Ship";
       } else {
         userSquares[random].classList.add("miss");
+        infoDisplay.innerHTML = "Computer MISS HIT on your Ship";
       }
       console.log(">>>>>>", checkForWins());
       checkForWins();
